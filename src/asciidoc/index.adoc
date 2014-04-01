@@ -1,5 +1,5 @@
 = Spring Framework Reference Documentation
-Rod Johnson; Juergen Hoeller; Keith Donald; Colin Sampaleanu; Rob Harrop; Thomas Risberg; Alef Arendsen; Darren Davison; Dmitriy Kopylenko; Mark Pollack; Thierry Templier; Erwin Vervaet; Portia Tung; Ben Hale; Adrian Colyer; John Lewis; Costin Leau; Mark Fisher; Sam Brannen; Ramnivas Laddad; Arjen Poutsma; Chris Beams; Tareq Abedrabbo; Andy Clement; Dave Syer; Oliver Gierke; Rossen Stoyanchev; Phillip Webb; Rob Winch; Brian Clozel; Stephane Nicoll; Sebastien Deleuze
+Rod Johnson; Juergen Hoeller; Keith Donald; Colin Sampaleanu; Rob Harrop; Thomas Risberg; Alef Arendsen; Darren Davison; Dmitriy Kopylenko; Mark Pollack; Thierry Templier; Erwin Vervaet; Portia Tung; Ben Hale; Adrian Colyer; John Lewis; Costin Leau; Mark Fisher; Sam Brannen; Ramnivas Laddad; Arjen Poutsma; Chris Beams; Tareq Abedrabbo; Andy Clement; Dave Syer; Oliver Gierke; Rossen Stoyanchev; Phillip Webb; Rob Winch; Brian Clozel; Stephane Nicoll; Sebastien Deleuze, Josh Long
 
 
 :javadoc-baseurl: http://docs.spring.io/spring/docs/current/javadoc-api
@@ -1172,6 +1172,7 @@ The following example shows the basic structure of Java-based configuration clas
 	
 	import org.springframework.context.annotation.*;
 	
+	// some times
 	@Configuration 
 	class ApplicationConfiguration {
 		
@@ -1199,7 +1200,7 @@ Instantiating a Spring IoC container is straightforward. Typically, an `Applicat
 constructed with a pointer to the configuration metadata to be consulted in configuring the container.  The pointer to the configuration metadata might be a String containing a URI to an XML file, or a  class literal designating a Java configuration class, or something else. 
 
 Choose your `ApplicationContext` subclass according to the format of your configuration format. 
-To configure an `ApplicationContext` using an XML configuration file, use a `{javadoc-baseurl}/org/springframework/context/support/ClassPathXmlApplicationContext.html[`ClassPathXmlApplicationContext`].
+To configure an `ApplicationContext` using an XML configuration file, use a {javadoc-baseurl}/org/springframework/context/support/ClassPathXmlApplicationContext.html[`ClassPathXmlApplicationContext`].
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -1217,7 +1218,7 @@ particular, `Resource` paths are used to construct applications contexts as desc
 <<resources-app-ctx>>.
 ====
 
-To configure an `ApplicationContext` using an Java configuration class, use a `{javadoc-baseurl}org/springframework/context/annotation/AnnotationConfigApplicationContext.html[`AnnotationConfigApplicationContext`].
+To configure an `ApplicationContext` using an Java configuration class, use a {javadoc-baseurl}org/springframework/context/annotation/AnnotationConfigApplicationContext.html[`AnnotationConfigApplicationContext`].
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -1401,7 +1402,7 @@ system properties at runtime.
 
  
 
-In Java configuration, use   the `@Import` annotation to load bean definitions from another configuration class. For example:
+In Java configuration, use   the `@Import` annotation to load bean definitions from another configuration class or classes. For example:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -1576,7 +1577,7 @@ by name.
 
 
 [[beans-beanname-alias]]
-===== Aliasing a bean outside the bean definition
+===== Aliasing a bean outside the bean definition in XML
 In an XML bean definition itself, you can supply more than one name for the bean, by using a
 combination of up to one name specified by the `id` attribute, and any number of other
 names in the `name` attribute. These names can be equivalent aliases to the same bean,
@@ -2201,7 +2202,14 @@ Unlike the __typical__ case (with no circular dependencies), a circular dependen
 between bean A and bean B forces one of the beans to be injected into the other prior to
 being fully initialized itself (a classic chicken/egg scenario). 
 
-One possible solution (available only through the XML configuration format) is to edit the source code of some classes to be configured by setters rather than constructors. Alternatively, avoid constructor injection and use setter injection only. In other words, although it is not recommended, you can configure circular dependencies with setter injection in the XML configuration format.
+One possible solution (available only in the XML configuration format) is to edit the 
+source code of some classes to be configured by setters rather than constructors. 
+Alternatively, avoid constructor injection and use setter injection only. In other words, 
+although it is not recommended, you can configure circular dependencies with setter injection in the XML 
+configuration format. Another solution is to use the {javadoc-baseurl}/org/springframework/context/annotation/Lazy.html[`Lazy`] 
+annotation or <<beans-factory-lazy-init,`lazy-init`>> attribute.
+
+
 ****
 
 You can generally trust Spring to do the right thing. It detects configuration problems,
@@ -2950,7 +2958,8 @@ The p-namespace is not as flexible as the standard XML format. For example, the 
 for declaring property references clashes with properties that end in `Ref`, whereas the
 standard XML format does not. We recommend that you choose your approach carefully and
 communicate this to your team members, to avoid producing XML documents that use all
-three approaches at the same time.
+three approaches at the same time. The Java compiler prevents these sorts 
+of mistakes altogether when using Java configuration.
 ====
 
 
@@ -2962,7 +2971,7 @@ then nested `constructor-arg` elements.
 
 Let's review the examples from <<beans-constructor-injection>> with the `c:` namespace:
 
-[source,java,indent=0]
+[source,xml,indent=0]
 [subs="verbatim,quotes"]
 ----
 	<beans xmlns="http://www.springframework.org/schema/beans"
@@ -2996,7 +3005,7 @@ For the rare cases where the constructor argument names are not available (usual
 the bytecode was compiled without debugging information), one can use fallback to the
 argument indexes:
 
-[source,java,indent=0]
+[source,xml,indent=0]
 [subs="verbatim,quotes"]
 ----
 	<!-- c-namespace index declaration -->
